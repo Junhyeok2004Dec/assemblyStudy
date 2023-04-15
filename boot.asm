@@ -1,44 +1,22 @@
 section .data
 
 message: db "calculate", 0xa
-len equ $-message
+len equ $ - message
 
-
-exportadd: db $-getlen
-
-section .bss
-
-	push rbp
-	mov rbp, rsp 
-	sub rsp, 0x0e4h
-
-	mov rsp, esp
-	sub rsp, 0x0080
-	push rdx
-	int 0x0080
-	
-	mov rdx, rsp
-	
-	sub esp, $-rsp
-	sub rsp, $-rdx
-	int 0x0080
-	
-	str ecx, message
-	mov rex, len
-	push rex
-	int 0x0080
-	
-	push rdx
-	
-	mov esp, rdx
-	push rdx
 
 section .text
-	global _start
-	
+
+global _start
+
 _start:
 
-	mov edx, len
-	mov ecx, message
-
+	mov edx, len ;edx : 길이
+	mov ecx, message ; 메시지 주소
+	mov ebx, 1 ;descripter 
+	mov eax, 4
+	int 0x80 ;kern' call
 	
+	;exit
+	mov ebx, 0 ;return(0) or exit(0)
+	mov eax, 1 ;sys call
+	int 0x80 
